@@ -76,8 +76,6 @@ El objetivo del aprendizaje supervisado es encontrar una hipótesis $h^*$ tal qu
 
             (2) $E_o(h^*)≈E_i(h^*)$
 
-
-
 **Generalización**
 
 > *Capacidad de un modelo para desempeñarse bien en datos desconocidos, no solo en datos conocidos (de entrenamiento)*
@@ -87,8 +85,6 @@ Necesitamos $E_{in}(θ)=0$ **y** $E_{in}(θ)=E_{out}(θ)$
     - Si se cumple una pero la otra no o no podemos garantizar una de ellas, entonces no hay aprendizaje.
 
     - Si la diferencia entre $E_0$ y $E_i$ es casi 0 y $E_i$ se acerca a 0, hay aprendizaje
-
-
 
 **Desigualdad de Hoeffding**
 
@@ -101,8 +97,6 @@ Esto implica que, con suficientes datos $(M)$, es probable que el error $E_i$ y 
 - *Problemas con la Desigualdad de Hoeffding*
   
   No toma en cuenta la complejidad del conjunto de hipótesis $H$. Si $H$ es muy grande, la cota puede ser demasiado amplia.
-  
-  
 
 **Dicotomía**
 
@@ -113,8 +107,6 @@ Para un número de datos de tamaño $M$, el número de dicotomías posibles est�
 Debido a la complejidad del espacio de hipótesis, se introduce una cota más ajustada, tomando en cuenta el número máximo de dicotomías $(m_H)$ que el espacio de hipótesis $H$ puede generar sobre $M$ puntos.
 
 <img src="file:///C:/Users/geo_s/AppData/Roaming/marktext/images/2025-01-28-12-49-04-image.png" title="" alt="" data-align="center">
-
-
 
 **Dimensión VC $d_{vc}$**
 
@@ -128,8 +120,6 @@ Si $d_{vc}$ es finita, entonces $m_h(H)$ crece polinomialmente con $M$, lo que p
 
 Un modelo con una dimensión VC alta puede ajustarse a muchos conjuntos de datos diferentes, pero también es más propenso al sobreajuste.
 
-
-
 **Regla de Oro para la Generalización**
 
 Se sugiere que, para garantizar una buena generalización, el número de datos de entrenamiento $M$ debe ser al menos 10 veces la dimensión $VC$ del espacio de hipótesis.
@@ -137,3 +127,121 @@ Se sugiere que, para garantizar una buena generalización, el número de datos d
 > $M ≥ 10dv(H)$
 
 - Sin embargo, esta regla no es siempre aplicable y depende del problema específico.
+
+**Sobreajuste (sobreaprendizaje)**
+
+> Ocurre cuando el modelo se ajusta demasiado a los datos de entrenamiento, capturando incluso en los ruidos y los errores, lo que resulta en un mal desempeño en datoss nos vistos.
+
+**Subajuste (subaprendizaje)**
+
+> Ocurre cuando el modelo es demasiado simple y no captura la estructura subyacente de los datos, lo que también resulta en un mal desempeño.
+
+Es importante tomar en cuenta el tamaño del conjunto de datos $M$, ya que entre más datos, es más probable que el modelo capture la verdadera distribución y generalice meejor, sin embargo, si el espacio de hipótesis es demasiado complejo, necesitaremos más datos para evitar el sobreaprendizaje.
+
+
+
+---
+
+#### Árboles de decisión
+
+Modelo de aprendizaje supervizado fácil de interpretar, que divide recursivamente el espacio en regiones más pequeñas, asignando una etiqueta o valor a cada región.
+
+- **Nodos internos:** Representan pruebas sobre atributos o características.
+
+- **Ramas:** Corresponden a los posibles valores de los atributos
+
+- **Hojas:** Asignan una clase o valor a las instancias que llegan a ellas.
+
+
+
+**Espacio de hipótesis**
+
+Los árboles de decisión pueden representar **cualquier función** de los atributos de entrada, incluyendo funciones booleanas. Sin embargo, esto puede requerir un número exponencial de nodos, lo que los hace computacionalmente costosos para problemas complejos.
+
+
+
+**Aprendizaje de árboles de decisión**
+
+- *NP-Completo*: Un problema de este tipo es encontrar el árbol de decisión más pequeño/óptimo, por lo que se recurre a heurísticas *greedy*.
+
+- *Algoritmo Greedy*: 
+  
+  1. Comienza con un árbol vacío.
+  
+  2. En cada paso, selecciona el mejor atributo para dividir los datosw.
+  
+  3. Repite el proceso recursivamente en cada subconjunto.
+
+
+
+**Selección de atributos**
+
+- *Ganancia de información:* Se utiliza para seleccionar el mejor atributo para dividir. La ganancia de información mide la reducción de la entropía despues de dividir los datos.
+  
+  - *Entropía:* Mide la incertidumbre en la distribución de las clases.
+
+<img title="" src="file:///C:/Users/geo_s/AppData/Roaming/marktext/images/2025-02-02-15-57-02-image.png" alt="" data-align="center" width="365">
+
+
+
+**Sobreajuste en Árboles de decisión**
+
+El mayor problema es que tienden a sobreajustarse a los datos de entrenamiento, especialmente cuando son muy profundos. Para esto hay diversas soluciones:
+
+- *Poda de árbol*: Se usa para reducir el sobreajuste eliminando ramas irrelevantes.
+  
+  - Poda pre-pruning: Detiene el crecimiento temprano del árbol.
+  
+  - Poda post-prunning: Reduce el tamaño después de que el árbol está construido.
+
+- *Métodos de ensamblaje:* Como bosques aleatorios, que combinan múltiples árboles para reducir el sobreajuste.
+
+
+
+**Métodos de ensamblaje**
+
+- Bagging (Bootstrap Aggregation): Entrenar múltiples modelos en diferentes subconjuntos de datos (muestras bootstrap) y combinar sus predicciones. Reduce la varianza del modelo sin aumentar el sesgo.
+
+- Bosque aleatorio: Combina bagging con la selección aleatoria de atributos en cada división de árboles. Reduce el sobreajuste y mejora la generalización.
+  
+  - Algoritmo:
+    
+    1. Se generan múltiples árboles utilizando muestras bootstraps.
+    
+    2. En cada división, se selecciona un subconjunto aleatorio de atributos.
+    
+    3. Las predicciones finales se obtienen por mayoría (clasificación) o promedio (regresión).
+
+
+
+**Algoritmos**
+
+- *ID3:* utiliza la ganancia de información para seleccionar atributos.
+
+- *C4.5:* Una mejora de ID3 que maneja datos continuos y valores faltantes.
+
+- CART: Utiliza el criterio de Gini para clasificar.
+
+
+
+**Trade-off entre sesgo y varianza**
+
+- *Sesgo (Bias)*: Error debido a suposiciones incorrectas en el modelo.
+
+- *Varianza:* Error debido a la sensibilidad del modelo a pequeñas fluctuaciones en el conjunto de entrenamiento.
+
+
+
+**Aplicaciones**
+
+Los árboles de decisión y los métodos de ensamblaje son ampliamente utilizados en el problemas de clasificación, como la detección de spam, diagnóstico médico, etc.
+
+También se pueden utilizar para problemas de regresión, donde el objetivo es predecir un valor continuo.
+
+
+
+**Limitaciones**
+
+- *Sobreajuste:* Aunque los métodos de ensamblaje ayudan a reducir el sobreajuste, los árboles individuales aún pueden ser propensos a este problema.
+
+- *Interpretabilidad:* Aunque los árboles individuales son interpretables, los métodos de ensamblaje como Bosque Aleatorio son menos interpretables debido a la combinación de múltiples árboles.
